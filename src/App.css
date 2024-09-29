@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  padding: 0 400px;
+  justify-content: center;
 }
 
 .App-logo {
@@ -62,33 +64,46 @@ h1 {
 .input-text {
   width: 70%;
   padding: 10px;
-  margin-right: 10px;
   border: 1px;
+  background-color: #cbe1e4;
+  margin-bottom: 10px;
 }
-
+.list{
+  margin-bottom: 10px;
+  border: 2px;
+}
+.todo{
+  background-color: #cbe1e4;
+}
+.todo-item{
+  padding-bottom: 10px;
+}
+.check{
+  position: relative;
+}
 button {
-  padding: 10px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  background: #e9ecef;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-}
-
-li button {
-  background: red;
-  color: white;
+  background: #cbe1e4;
+  color: rgb(214, 86, 43);
   border: none;
-  padding: 5px 10px;
   border-radius: 5px;
+  padding: 5px 10px;
   cursor: pointer;
+  
+}
+button:hover{
+  color: #03010ded;
+}
+.under{
+  justify-content: space-around;
+  display: flex;
+}
+input[type='checkbox'] {
+  margin-right: 10px;
+}
+.list-item{
+  padding: 0 80px;
+}
+.filter-buttons {
+  display: flex;
+  gap: 10px;
 }

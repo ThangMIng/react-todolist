@@ -1,110 +1,79 @@
-
 import './App.css';
 import React from 'react';
+import TodoInput from './TodoInput/index.js';
+import TodoList from './TodoList/index.js';
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       data: [
-        {
-          id: 0,
-          name: 'Làm bài tập',
-          status: true
-        },
-        {
-          id: 1,
-          name: "Giặt đồ",
-          status: false
-        }
+        { id: 0, name: 'Làm bài tập', status: true },
+        { id: 1, name: 'Giặt đồ', status: false }
       ],
-      search: ''
-    }
+      filter: 'all' 
+    };
   }
 
   findMax = () => {
-    const { data } = this.state;
-    let max = 0;
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].id > max) {
-        max = data[i].id
-      }
-    }
-    return max;
+    return this.state.data.length ? Math.max(...this.state.data.map(item => item.id)) : 0;
   }
 
-  add = (e) => {
-    const { value } = e.target;
-    const { data } = this.state;
-    const max = this.findMax();
-
-    const newData = [...data, { id: max + 1, name: value, status: false }]
-
-    this.setState({
-      data: newData,
-      search: ''
-    })
-    // console.log(value)
+  addTodo = (name) => {
+    const newData = [...this.state.data, { id: this.findMax() + 1, name, status: false }];
+    this.setState({ data: newData });
   }
 
-  changeSearch = (e) => {
-    const { value } = e.target;
-    this.setState({
-      search: value
-    })
+  editTodo = (id, name) => {
+    this.setState(prevState => ({
+      data: prevState.data.map(item => item.id === id ? { ...item, name } : item),
+    }));
+  }
+
+  toggleTodo = (index) => {
+    this.setState(prevState => ({
+      data: prevState.data.map((item, idx) => idx === index ? { ...item, status: !item.status } : item)
+    }));
+  }
+
+  deleteTodo = (id) => {
+    this.setState(prevState => ({
+      data: prevState.data.filter(item => item.id !== id)
+    }));
+  }
+
+  setFilter = (filter) => {
+    this.setState({ filter });
+  }
+  clearAll = () =>{
+    this.setState({data: []});
   }
 
   render() {
+    const { data, filter } = this.state;
 
-    // const abc = this.state.data;
-    // const test = this.state.test;
-    const { data, search } = this.state;
+    const filteredData = data.filter(item => {
+      if (filter === 'completed') return item.status;
+      if (filter === 'incomplete') return !item.status;
+      return true; 
+    });
 
     return (
       <div className="App">
-        <div>Header</div>
-
-        <div class="container">
-          <input
-            class="input-text"
-            value={search}
-            onChange={(e) => this.changeSearch(e)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                this.add(e)
-              }
-            }}
-            type="text"
-            id="task-input"
-            placeholder="What need to be done ? ..."
-          />
-          {/* <button id="add-task" >Thêm</button> */}
-
-          <div>
-            {
-              data.map((item, index) => {
-                return (
-                  <div key={item.id} style={{ display: 'flex' }}>
-                    <input type='checkbox' checked={item.status} />
-                    <div style={{ display: 'flex', flex: 1, marginLeft: '5px' }}>{item.name}</div>
-                  </div>
-                )
-              })
-            }
-
-
-          </div>
-        </div>
-
-        {/* <div class="container">
-
-        </div> */}
-
-
+        <h1>todos</h1>
+        <TodoInput addTodo={this.addTodo} />
+        <TodoList
+          todos={filteredData} 
+          toggleTodo={this.toggleTodo} 
+          deleteTodo={this.deleteTodo} 
+          editTodo={this.editTodo} 
+          setFilter={this.setFilter}
+          clearAll={this.clearAll}
+        />
       </div>
-    )
+    );
   }
-
 }
 
 export default App;
