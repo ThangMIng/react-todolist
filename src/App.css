@@ -2,6 +2,7 @@
   text-align: center;
   padding: 0 400px;
   justify-content: center;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .App-logo {
@@ -38,7 +39,14 @@
     transform: rotate(360deg);
   }
 }
-
+.light-theme{
+  background-color: white; 
+  color: black; 
+}
+.dark-theme{
+  background-color: black; 
+  color: white; 
+}
 body {
   font-family: inherit;
   background-color: #f4f4f4;
@@ -106,4 +114,7 @@ input[type='checkbox'] {
 .filter-buttons {
   display: flex;
   gap: 10px;
+}
+.btn-tg{
+  margin-top: 10px;
 }

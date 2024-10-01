@@ -2,7 +2,9 @@ import './App.css';
 import React from 'react';
 import TodoInput from './TodoInput/index.js';
 import TodoList from './TodoList/index.js';
-import './App.css';
+import ThemeToggle from './Theme/ThemeToggle.js';
+import { ThemeContext,ThemeProvider } from './Theme/ThemeContext';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class App extends React.Component {
         { id: 0, name: 'Làm bài tập', status: true },
         { id: 1, name: 'Giặt đồ', status: false }
       ],
-      filter: 'all' 
+      filter: 'all'
     };
   }
 
@@ -46,8 +48,8 @@ class App extends React.Component {
   setFilter = (filter) => {
     this.setState({ filter });
   }
-  clearAll = () =>{
-    this.setState({data: []});
+  clearAll = () => {
+    this.setState({ data: [] });
   }
 
   render() {
@@ -56,22 +58,32 @@ class App extends React.Component {
     const filteredData = data.filter(item => {
       if (filter === 'completed') return item.status;
       if (filter === 'incomplete') return !item.status;
-      return true; 
+      return true;
     });
 
     return (
-      <div className="App">
-        <h1>todos</h1>
-        <TodoInput addTodo={this.addTodo} />
-        <TodoList
-          todos={filteredData} 
-          toggleTodo={this.toggleTodo} 
-          deleteTodo={this.deleteTodo} 
-          editTodo={this.editTodo} 
-          setFilter={this.setFilter}
-          clearAll={this.clearAll}
-        />
-      </div>
+      <ThemeProvider>
+        <ThemeContext.Consumer>
+          {({ isDarkTheme }) => {
+            document.body.className = isDarkTheme ? 'dark-theme' : 'light-theme';
+            return (
+              <div className="App">
+                <h1>todos</h1>
+                <TodoInput addTodo={this.addTodo} />
+                <TodoList
+                  todos={filteredData}
+                  toggleTodo={this.toggleTodo}
+                  deleteTodo={this.deleteTodo}
+                  editTodo={this.editTodo}
+                  setFilter={this.setFilter}
+                  clearAll={this.clearAll}
+                />
+                <div className='btn-tg'><ThemeToggle /></div>
+              </div>
+            );
+            }}
+          </ThemeContext.Consumer>
+      </ThemeProvider>
     );
   }
 }
