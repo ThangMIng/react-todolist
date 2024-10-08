@@ -2,47 +2,27 @@ import React, { Component } from 'react';
 import '../App.css';
 
 class TodoList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      idEdit: -1,
-    };
-  }
-
   render() {
-    const { todos, toggleTodo, deleteTodo, editTodo, clearAll, setFilter } = this.props;
+    const { todos, toggleTodo, deleteTodo, startEditTodo, clearAll, setFilter } = this.props;
 
     return (
       <div className="list-item">
         <div className="list">
-          {todos.map((item, index) => (
+          {todos.map((item) => (
             <div className="todo" key={item.id} style={{ display: 'flex', alignItems: 'center' }}>
               <input
                 type="checkbox"
                 checked={item.status}
-                onChange={() => toggleTodo(index)}
+                onChange={() => toggleTodo(item.id)}
                 style={{ marginRight: '10px' }}
               />
-              {item.id === this.state.idEdit ? (
-                <input
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      editTodo(item.id, e.target.value);
-                      this.setState({ idEdit: -1 });
-                    }
-                  }}
-                  style={{ flex: 1, marginBottom: '5px' }}
-                  defaultValue={item.name}
-                />
-              ) : (
-                <div
-                  className="todo-item"
-                  onClick={() => this.setState({ idEdit: item.id })}
-                  style={{ flex: 1, cursor: 'pointer', textDecoration: item.status ? 'line-through' : 'none' }}
-                >
-                  {item.name}
-                </div>
-              )}
+              <div
+                className="todo-item"
+                style={{ flex: 1, cursor: 'pointer', textDecoration: item.status ? 'line-through' : 'none' }}
+              >
+                {item.name}
+              </div>
+              <button className="btn-edit" onClick={() => startEditTodo(item.id, item.name)}>Sửa</button>
               <button className="btn-x" onClick={() => deleteTodo(item.id)}>x</button>
             </div>
           ))}

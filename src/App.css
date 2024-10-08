@@ -118,3 +118,8 @@ input[type='checkbox'] {
 .btn-tg{
   margin-top: 10px;
 }
+.list-item {
+  height: 400px;  
+  overflow-y: auto; 
+  margin-bottom: 20px;
+}

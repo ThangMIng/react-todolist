@@ -2,33 +2,20 @@ import React, { Component } from 'react';
 import '../App.css';
 
 class TodoInput extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputValue: '',
-    };
-  }
-
   handleAdd = (e) => {
-    if (e.key === 'Enter' && this.state.inputValue.trim()) {
-      this.props.addTodo(this.state.inputValue);
-      this.setState({ inputValue: '' });
+    if (e.key === 'Enter') {
+      this.props.addTodo(); 
     }
-  };
-
-  handleChange = (e) => {
-    this.setState({ inputValue: e.target.value });
   };
 
   render() {
     return (
       <input
         className="input-text"
-        value={this.state.inputValue}
-        onChange={this.handleChange}
+        ref={this.props.inputRef} 
         onKeyDown={this.handleAdd}
         type="text"
-        placeholder="What need to be done? ..."
+        placeholder="What needs to be done? ..."
       />
     );
   }
