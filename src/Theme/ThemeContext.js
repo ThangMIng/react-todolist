@@ -3,10 +3,12 @@ import React, { createContext, Component } from 'react';
 export const ThemeContext = createContext();
 
 export class ThemeProvider extends Component {
-  state = {
+  constructor(props) {
+    super(props);
+    this.state = {
     isDarkTheme: false,
-  };
-
+  }
+};
   toggleTheme = () => {
     this.setState(prevState => ({ isDarkTheme: !prevState.isDarkTheme }));
   };

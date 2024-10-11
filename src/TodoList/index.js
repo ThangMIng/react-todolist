@@ -3,12 +3,13 @@ import '../App.css';
 
 class TodoList extends Component {
   render() {
-    const { todos, toggleTodo, deleteTodo, startEditTodo, clearAll, setFilter } = this.props;
+    const { data, toggleTodo, deleteTodo, startEditTodo, clearAll, setFilter } = this.props;
+
 
     return (
       <div className="list-item">
         <div className="list">
-          {todos.map((item) => (
+          {data.map((item) => (
             <div className="todo" key={item.id} style={{ display: 'flex', alignItems: 'center' }}>
               <input
                 type="checkbox"

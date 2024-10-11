@@ -1,9 +1,12 @@
 import './App.css';
 import React from 'react';
-import TodoInput from './TodoInput/index.js';
-import TodoList from './TodoList/index.js';
-import ThemeToggle from './Theme/ThemeToggle.js';
-import InfiniteScroll from './scroll/infiniteScroll';
+import TodoInput from './TodoInput';
+import TodoList from './TodoList';
+import ThemeToggle from './Theme/ThemeToggle';
+import infiniteScroll from './HOC/Scroll.js';
+import { ThemeContext } from './Theme/ThemeContext.js';
+
+const TodoListInfiniteScroll = infiniteScroll(TodoList, 5);
 
 class App extends React.Component {
   constructor(props) {
@@ -12,8 +15,6 @@ class App extends React.Component {
       data: [],
       filter: 'all',
       editId: null,
-      currentPage: 0,
-      todosPerPage: 5,
     };
     this.inputRef = React.createRef();
   }
@@ -29,7 +30,7 @@ class App extends React.Component {
       const newData = [...this.state.data, { id: this.findMax() + 1, name, status: false }];
       this.setState({ data: newData });
     }
-    this.inputRef.current.value = ''; 
+    this.inputRef.current.value = '';
   }
 
   findMax = () => {
@@ -38,7 +39,7 @@ class App extends React.Component {
 
   startEditTodo = (id, name) => {
     this.setState({ editId: id });
-    this.inputRef.current.value = name; 
+    this.inputRef.current.value = name;
   }
 
   toggleTodo = (id) => {
@@ -58,15 +59,11 @@ class App extends React.Component {
   }
 
   clearAll = () => {
-    this.setState({ data: [], currentPage: 0 });
-  }
-
-  loadMore = () => {
-    this.setState(prevState => ({ currentPage: prevState.currentPage + 1 }));
+    this.setState({ data: [] });
   }
 
   render() {
-    const { data, filter, currentPage, todosPerPage } = this.state;
+    const { data, filter } = this.state;
 
     const filteredData = data.filter(item => {
       if (filter === 'completed') return item.status;
@@ -74,25 +71,27 @@ class App extends React.Component {
       return true;
     });
 
-    const hasMore = currentPage * todosPerPage < filteredData.length;
-
-    const todosToDisplay = filteredData.slice(0, (currentPage + 1) * todosPerPage);
-
     return (
-        <div className="App">
-          <h1>todos</h1>
-          <TodoInput addTodo={this.addTodo} inputRef={this.inputRef} />
-          <TodoList
-            todos={todosToDisplay}
-            toggleTodo={this.toggleTodo}
-            deleteTodo={this.deleteTodo}
-            startEditTodo={this.startEditTodo}
-            setFilter={this.setFilter}
-            clearAll={this.clearAll}
-          />
-          <InfiniteScroll loadMore={this.loadMore} hasMore={hasMore} />
-          <ThemeToggle />
-        </div>
+      <ThemeContext.Consumer>
+        {({ isDarkTheme }) => {
+          document.body.className = isDarkTheme ? 'dark-theme' : 'light-theme';
+          return (
+            <div className="App">
+              <h1>todos</h1>
+              <TodoInput addTodo={this.addTodo} inputRef={this.inputRef} /> 
+              <TodoListInfiniteScroll
+                data={filteredData}
+                toggleTodo={this.toggleTodo}
+                deleteTodo={this.deleteTodo}
+                startEditTodo={this.startEditTodo}
+                setFilter={this.setFilter}
+                clearAll={this.clearAll}
+              />
+              <div className='btn-tg'><ThemeToggle /></div>
+            </div>
+          );
+        }}
+      </ThemeContext.Consumer>
     );
   }
 }
